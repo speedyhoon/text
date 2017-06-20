@@ -372,11 +372,42 @@ func (s *state) walkRange(dot reflect.Value, r *parse.RangeNode) {
 	}
 }
 
+func (s *state)assign(tName string)(tmpl *Template){
+	tmpl = s.tmpl.tmpl[tName]
+	if tmpl == nil{
+		s.errorf("template %q not defined", tName)
+	}
+	return
+}
+
+func (s *state)evalTemplateName(dot reflect.Value, t *parse.TemplateNode)(tmpl *Template){
+	fmt.Println("evalTemplateName")
+	if !strings.HasPrefix(t.Name, "."){
+		s.errorf("template %q not defined", t.Name)
+		return
+	}
+
+	name := strings.TrimPrefix(t.Name, ".")
+	
+	if newName := dot.FieldByName(name); newName.Kind() != reflect.Invalid{
+		tmpl = s.assign(newName.String())
+		return
+	}else if newName := dot.MethodByName(name); newName.Kind() != reflect.Invalid{
+		tmpl = s.assign(newName.Call([]reflect.Value{})[0].String())
+		return
+	}
+	
+	if tmpl == nil{
+		s.errorf("type %s doesn't have a field or method %v", dot.Type(), t.Name)
+	}
+	return
+}
+
 func (s *state) walkTemplate(dot reflect.Value, t *parse.TemplateNode) {
 	s.at(t)
 	tmpl := s.tmpl.tmpl[t.Name]
 	if tmpl == nil {
-		s.errorf("template %q not defined", t.Name)
+		tmpl = s.evalTemplateName(dot, t)
 	}
 	if s.depth == maxExecDepth {
 		s.errorf("exceeded maximum template depth (%v)", maxExecDepth)

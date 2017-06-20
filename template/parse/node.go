@@ -824,6 +824,9 @@ func (t *Tree) newTemplate(pos Pos, line int, name string, pipe *PipeNode) *Temp
 }
 
 func (t *TemplateNode) String() string {
+	if strings.HasPrefix(t.Name, "."){
+		return fmt.Sprintf("{{template %s %s}}", t.Name, t.Pipe)
+	}
 	if t.Pipe == nil {
 		return fmt.Sprintf("{{template %q}}", t.Name)
 	}
