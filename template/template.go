@@ -5,9 +5,9 @@
 package template
 
 import (
+	"github.com/speedyhoon/text/template/parse"
 	"reflect"
 	"sync"
-	"github.com/speedyhoon/text/template/parse"
 )
 
 // common holds the information shared by related templates.

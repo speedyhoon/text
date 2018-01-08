@@ -7,12 +7,12 @@ package template
 import (
 	"bytes"
 	"fmt"
+	"github.com/speedyhoon/text/template/parse"
 	"io"
 	"reflect"
 	"runtime"
 	"sort"
 	"strings"
-	"github.com/speedyhoon/text/template/parse"
 )
 
 // maxExecDepth specifies the maximum stack depth of templates within
@@ -372,25 +372,25 @@ func (s *state) walkRange(dot reflect.Value, r *parse.RangeNode) {
 	}
 }
 
-func (s *state)assign(tName string)(tmpl *Template){
+func (s *state) assign(tName string) (tmpl *Template) {
 	tmpl = s.tmpl.tmpl[tName]
-	if tmpl == nil{
+	if tmpl == nil {
 		s.errorf("template %q not defined", tName)
 	}
 	return
 }
 
-func (s *state)evalTemplateName(dot reflect.Value, t *parse.TemplateNode) *Template {
-	if !strings.HasPrefix(t.Name, "."){
+func (s *state) evalTemplateName(dot reflect.Value, t *parse.TemplateNode) *Template {
+	if !strings.HasPrefix(t.Name, ".") {
 		s.errorf("template %q not defined", t.Name)
 		return nil
 	}
 
 	name := strings.TrimPrefix(t.Name, ".")
-	
-	if newName := dot.FieldByName(name); newName.Kind() != reflect.Invalid{
+
+	if newName := dot.FieldByName(name); newName.Kind() != reflect.Invalid {
 		return s.assign(newName.String())
-	}else if newName := dot.MethodByName(name); newName.Kind() != reflect.Invalid{
+	} else if newName := dot.MethodByName(name); newName.Kind() != reflect.Invalid {
 		return s.assign(newName.Call([]reflect.Value{})[0].String())
 	}
 
