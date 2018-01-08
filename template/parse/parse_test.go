@@ -237,6 +237,7 @@ var parseTests = []parseTest{
 	{"comment trim left and right", "x \r\n\t{{- /* */ -}}\n\n\ty", noError, `"x""y"`},
 	{"block definition", `{{block "foo" .}}hello{{end}}`, noError,
 		`{{template "foo" .}}`},
+	{"template with field ref", "{{template .X}}", noError, "{{template .X <nil>}}"},
 	// Errors.
 	{"unclosed action", "hello{{range", hasError, ""},
 	{"unmatched end", "{{end}}", hasError, ""},
@@ -250,7 +251,6 @@ var parseTests = []parseTest{
 	{"variable undefined after end", "{{with $x := 4}}{{end}}{{$x}}", hasError, ""},
 	{"variable undefined in template", "{{template $v}}", hasError, ""},
 	{"declare with field", "{{with $x.Y := 4}}{{end}}", hasError, ""},
-	{"template with field ref", "{{template .X}}", hasError, ""},
 	{"template with var", "{{template $v}}", hasError, ""},
 	{"invalid punctuation", "{{printf 3, 4}}", hasError, ""},
 	{"multidecl outside range", "{{with $v, $u := 3}}{{end}}", hasError, ""},
