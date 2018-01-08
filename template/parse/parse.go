@@ -579,7 +579,7 @@ func (t *Tree) parseTemplateName(token item, context string) (name string) {
 			t.error(err)
 		}
 		name = s
-	case 7:
+	case itemField:
 		name = token.val
 	default:
 		t.unexpected(token, context)
