@@ -9,8 +9,8 @@ package template
 import (
 	"bytes"
 	"fmt"
-	"testing"
 	"github.com/speedyhoon/text/template/parse"
+	"testing"
 )
 
 const (

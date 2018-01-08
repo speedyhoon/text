@@ -5,10 +5,10 @@
 package template_test
 
 import (
+	"github.com/speedyhoon/text/template"
 	"log"
 	"os"
 	"strings"
-	"github.com/speedyhoon/text/template"
 )
 
 func ExampleTemplate() {
