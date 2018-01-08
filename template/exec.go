@@ -380,27 +380,22 @@ func (s *state)assign(tName string)(tmpl *Template){
 	return
 }
 
-func (s *state)evalTemplateName(dot reflect.Value, t *parse.TemplateNode)(tmpl *Template){
-	fmt.Println("evalTemplateName")
+func (s *state)evalTemplateName(dot reflect.Value, t *parse.TemplateNode) *Template {
 	if !strings.HasPrefix(t.Name, "."){
 		s.errorf("template %q not defined", t.Name)
-		return
+		return nil
 	}
 
 	name := strings.TrimPrefix(t.Name, ".")
 	
 	if newName := dot.FieldByName(name); newName.Kind() != reflect.Invalid{
-		tmpl = s.assign(newName.String())
-		return
+		return s.assign(newName.String())
 	}else if newName := dot.MethodByName(name); newName.Kind() != reflect.Invalid{
-		tmpl = s.assign(newName.Call([]reflect.Value{})[0].String())
-		return
+		return s.assign(newName.Call([]reflect.Value{})[0].String())
 	}
-	
-	if tmpl == nil{
-		s.errorf("type %s doesn't have a field or method %v", dot.Type(), t.Name)
-	}
-	return
+
+	s.errorf("type %s doesn't have a field or method %v", dot.Type(), t.Name)
+	return nil
 }
 
 func (s *state) walkTemplate(dot reflect.Value, t *parse.TemplateNode) {
