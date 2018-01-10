@@ -4,14 +4,14 @@ Dynamically load sub templates with {{template .MyVariable}}. Forked from Go's b
 [![Build Status](https://travis-ci.org/speedyhoon/text.svg?branch=master)](https://travis-ci.org/speedyhoon/text)
 [![go report card](https://goreportcard.com/badge/github.com/speedyhoon/text)](https://goreportcard.com/report/github.com/speedyhoon/text)
 
-```
+```go
 import (
 	"github.com/speedyhoon/text/template"
 )
 ```
 
 ## Example
-```
+```go
 package main
 
 import (
@@ -59,7 +59,7 @@ func main() {
 ```
 
 ## Output
-```
+```html
 <!doctype html>
 <html>
         <head>
