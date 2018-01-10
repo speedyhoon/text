@@ -4,12 +4,6 @@ Dynamically load sub templates with {{template .MyVariable}}. Forked from Go's b
 [![Build Status](https://travis-ci.org/speedyhoon/text.svg?branch=master)](https://travis-ci.org/speedyhoon/text)
 [![go report card](https://goreportcard.com/badge/github.com/speedyhoon/text)](https://goreportcard.com/report/github.com/speedyhoon/text)
 
-```go
-import (
-	"github.com/speedyhoon/text/template"
-)
-```
-
 ## Example
 ```go
 package main
@@ -21,19 +15,13 @@ import (
 )
 
 func main() {
-	const tpl = `
-<!doctype html>
-<html>
-	<head>
-		<title>{{.Title}}</title>
-	</head>
-	<body>
-		<p>Template name: {{.SubTemplate}}
-		{{template "foo" .}}
-		{{template .SubTemplate .}}
-	</body>
-</html>
-{{define "foo"}}<div>Template data: {{.Data}}</div>{{end}}`
+	const tpl = `{{.Title}}
+Template name: {{.SubTemplate}}
+Standard template: {{template "foo" .}}
+Dynamic template: {{template .SubTemplate .}}
+{{define "foo"}}
+	Template data: {{.Data}}
+{{end}}`
 
 	data := struct {
 		Title string
@@ -59,16 +47,13 @@ func main() {
 ```
 
 ## Output
-```html
-<!doctype html>
-<html>
-        <head>
-                <title>My page</title>
-        </head>
-        <body>
-                <p>Template name: foo
-                <div>Template data: Four, Five, Six.</div>
-                <div>Template data: Four, Five, Six.</div>
-        </body>
-</html>
+```
+My page
+Template name: foo
+Standard template:
+        Template data: Four, Five, Six.
+
+Dynamic template:
+        Template data: Four, Five, Six.
+
 ```
